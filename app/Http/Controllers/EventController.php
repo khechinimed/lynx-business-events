@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class EventController extends Controller
 {
@@ -31,10 +32,9 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
-            'timestamp' => 'required|date',
+            'timestamp' => 'required|date_format:Y-m-d H:i:s|after_or_equal:' . Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         if ($validator->fails()) {
@@ -44,7 +44,6 @@ class EventController extends Controller
         $event = Event::create($request->all());
 
         return response()->json(['event' => $event], 201);
-
     }
 
     /**
@@ -75,16 +74,16 @@ class EventController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+    
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
-            'timestamp' => 'required|date',
+            'timestamp' => 'required|date_format:Y-m-d H:i:s|after_or_equal:' . Carbon::now()->format('Y-m-d H:i:s'),
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-        
+
         $event = Event::find($id);
         if (!$event) {
             return response()->json(['error' => 'Event not found'], 404);
