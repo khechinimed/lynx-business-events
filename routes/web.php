@@ -22,6 +22,10 @@ Route::resource('events', EventController::class);
 
 Route::get('/events', [EventController::class, 'index']);
 
+Route::post('/events/create_event', [EventController::class, 'store']);
+
+Route::put('/events/{id}', 'EventController@update');
+ 
 Route::delete('/events/{id}', [EventController::class, 'destroy']);
 
 Route::get('/', function () {
