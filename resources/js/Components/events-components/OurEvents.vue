@@ -3,7 +3,15 @@
       + Ajouter un événement
     </button>
 
-    <modal :is-modal-visible="isModalVisible" @close-modal="closeModal"/>
+    <modal 
+        :is-modal-visible="isModalVisible" 
+        :is-editing.sync="isEditing"
+        :event-title-to-edit="eventTitle"
+        :event-date-to-edit="eventDate"
+        :fetch-data="fetchData"
+        :event-id="eventId"  
+        @close-modal="closeModal"
+    />
 
     <div class="max-w-8xl mx-auto bg-white shadow-md rounded">
       <table class="w-full table-auto max-w-full border">
@@ -42,26 +50,45 @@
         return {
             events: [],
             isModalVisible: false,
+            isEditing: false,
+            eventId: null,
+            eventTitle: '',
+            eventDate: ''
        };
     },
     
     methods: {
         fetchData() {
-        axios.get('/events')
-            .then(response => {
-                this.events = response.data.events;
-            })
-            .catch(error => {
-                console.error('Error fetching events:', error);
-            });
+            axios.get('/events')
+                .then(response => {
+                    this.events = response.data.events;
+                })
+                .catch(error => {
+                    console.error('Error fetching events:', error);
+                });
+        },
+
+        edit(id) {
+            this.isEditing = true;
+
+            this.eventId = id;
+
+            const eventToEdit = this.events.find(event => event.id === id);
+
+            if (eventToEdit) {
+                this.eventTitle = eventToEdit.title;
+                this.eventDate = eventToEdit.timestamp;
+            }
+
+            this.toggleModal();
         },
 
         remove(id) {
             axios.delete(`/events/${id}`)
             .then(response => {
-                // Assuming the response includes a success message or updated events data
+                
                 console.log('Event deleted successfully:', response.data);
-                // Update the events data after successful deletion
+                
                 this.events = this.events.filter(item => item.id !== id);
             })
             .catch(error => {
@@ -94,7 +121,11 @@
         },
         
         closeModal() {
+            this.eventTitle = '';
+            this.eventDate = '';
             this.isModalVisible = false;
+
+            this.isEditing = false;
         },
     },
     components: {

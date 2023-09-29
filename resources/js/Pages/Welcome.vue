@@ -54,7 +54,7 @@
 
               <a @click="handleMenuItemClick(EventManagement)" class="flex items-center space-x-2 mt-6 cursor-pointer" :class="{ 'text-blue-500': activeMenuItem === EventManagement }">
                 <font-awesome-icon icon="fa-pen-to-square" />
-                <span>Gestion des Events</span>
+                <span>Date Range Picker</span>
               </a>
             </nav>
             <div class="flex-shrink-0 p-4">
