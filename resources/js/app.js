@@ -1,6 +1,12 @@
 import './bootstrap';
 import '../css/app.css';
 
+import axios from 'axios';
+
+/** import custom js file */
+import './custom.js';
+
+
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -13,10 +19,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faUserSecret, faList, faCalendarDays, faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import { faUserSecret, faList, faCalendarDays, faPenToSquare, faEye, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faUserSecret, faList, faCalendarDays, faPenToSquare)
+library.add(faUserSecret, faList, faCalendarDays, faPenToSquare, faEye, faTrash)
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

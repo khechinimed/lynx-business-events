@@ -20,6 +20,10 @@ use App\Http\Controllers\EventController;
 
 Route::resource('events', EventController::class);
 
+Route::get('/events', [EventController::class, 'index']);
+
+Route::delete('/events/{id}', [EventController::class, 'destroy']);
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'laravelVersion' => Application::VERSION,
@@ -27,9 +31,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
 
 Route::middleware([
     'auth:sanctum',

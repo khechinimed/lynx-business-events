@@ -1,16 +1,16 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
-import { shallowRef } from 'vue';
+  import { Head } from '@inertiajs/vue3';
+  import { shallowRef } from 'vue';
 
-import OurEvents from '../Components/events-components/OurEvents.vue';
-import OurCalendar from '../Components/events-components/OurCalendar.vue';
-import EventManagement from '../Components/events-components/EventManagement.vue';
+  import OurEvents from '../Components/events-components/OurEvents.vue';
+  import OurCalendar from '../Components/events-components/OurCalendar.vue';
+  import EventManagement from '../Components/events-components/EventManagement.vue';
 
-const activeMenuItem = shallowRef(OurEvents);
+  const activeMenuItem = shallowRef(OurEvents);
 
-const handleMenuItemClick = (component) => {
-  activeMenuItem.value = component;
-};
+  const handleMenuItemClick = (component) => {
+    activeMenuItem.value = component;
+  };
 
 </script>
 
@@ -19,19 +19,9 @@ const handleMenuItemClick = (component) => {
     <div x-data="setup()" x-init="$refs.loading.classList.add('hidden');">
       <div class="flex h-screen antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light">
         <!-- Sidebar -->
-        <div
-          x-transition:enter="transform transition-transform duration-300"
-          x-transition:enter-start="-translate-x-full"
-          x-transition:enter-end="translate-x-0"
-          x-transition:leave="transform transition-transform duration-300"
-          x-transition:leave-start="translate-x-0"
-          x-transition:leave-end="-translate-x-full"
-          x-show="isSidebarOpen"
-          class="fixed inset-y-0 z-10 flex w-80"
-        >
-
+        <div class=" inset-y-0 z-10 flex w-80">
           <svg
-            class="absolute inset-0 w-full h-full text-white"
+            class="absolute inset-0 w-80 h-full text-white"
             style="filter: drop-shadow(10px 0 10px #00000030)"
             preserveAspectRatio="none"
             viewBox="0 0 309 800"
