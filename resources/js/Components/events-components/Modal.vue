@@ -22,6 +22,8 @@
 </template>
   
 <script>
+  import moment from 'moment';
+
   export default {
     props: ['isModalVisible', 'isEditing', 'eventId', 'eventTitleToEdit', 'eventDateToEdit', 'fetchData'],
     data() {
@@ -38,11 +40,13 @@
         },
 
         async addEvent() {
-                const formattedTimestamp = new Date(this.eventDate).toISOString().slice(0, 19).replace('T', ' ');
-                const eventData = {
-                    title: this.eventTitle,
-                    timestamp: formattedTimestamp,
-                };
+            const formattedTimestamp = moment(this.eventDate).format('YYYY-MM-DD HH:mm:00');
+
+            console.log('formattedTimestamp:', formattedTimestamp);
+            const eventData = {
+                title: this.eventTitle,
+                timestamp: formattedTimestamp,
+            };
 
             try {
                 const response = await axios.post('/events/create_event', eventData);
@@ -58,7 +62,7 @@
 
             this.closeModal();
 
-            const formattedTimestamp = new Date(this.eventDate).toISOString().slice(0, 19).replace('T', ' ');
+            const formattedTimestamp = moment(this.eventDate).format('YYYY-MM-DD HH:mm:00');
             const eventData = {
                 title: this.eventTitle,
                 timestamp: formattedTimestamp,
@@ -96,17 +100,11 @@
         },
     },
     computed: {
-        minDate() {
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
+        minDate(){
+            const tomorrow = moment().add(1, 'day');
+            const formattedDate = tomorrow.startOf('day').format('YYYY-MM-DDTHH:mm:ss');
 
-            const year = tomorrow.getFullYear();
-            const month = ('0' + (tomorrow.getMonth() + 1)).slice(-2);
-            const day = ('0' + tomorrow.getDate()).slice(-2);
-            const hours = '00';  // Set the minimum time to midnight
-            const minutes = '00';
-
-            return `${year}-${month}-${day}T${hours}:${minutes}`;
+            return formattedDate;
         },
         buttonText() {
             return this.isEditing ? 'Modifier' : 'Ajouter';

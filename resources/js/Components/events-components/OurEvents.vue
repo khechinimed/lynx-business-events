@@ -44,6 +44,7 @@
   
   <script>
   import Modal from './Modal.vue';
+  import moment from 'moment';
 
   export default {
     data() {
@@ -97,21 +98,20 @@
         },
 
         formatDate(dateTime) {
-            const eventDate = new Date(dateTime);
-            const month = ('0' + (eventDate.getMonth() + 1)).slice(-2);
-            const day = ('0' + eventDate.getDate()).slice(-2);
-            const year = eventDate.getFullYear();
+            const eventDate = moment(dateTime);
+            const formattedDate = eventDate.format('MM/DD/YYYY');
 
-            return `${month}/${day}/${year}`;
+            return formattedDate;
         },
 
         formatFrenchDate(dateTime) {
-            const eventDate = new Date(dateTime);
-            const day = eventDate.getDate();
-            const month = eventDate.toLocaleString('fr-FR', { month: 'long' });
-            const year = eventDate.getFullYear();
-            const hours = eventDate.getHours();
-            const minutes = eventDate.getMinutes();
+            const eventDate = moment(dateTime);
+
+            const day = eventDate.format('D');
+            const month = eventDate.format('MMMM');
+            const year = eventDate.format('YYYY');
+            const hours = eventDate.format('HH');
+            const minutes = eventDate.format('mm');
 
             return `${day} ${month} ${year} à ${hours}h${minutes}`;
         },

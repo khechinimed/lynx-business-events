@@ -1,7 +1,6 @@
 import './bootstrap';
 import '../css/app.css';
-
-import axios from 'axios';
+import moment from 'moment'
 
 /** import custom js file */
 import './custom.js';
@@ -30,13 +29,27 @@ createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
+        const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
-            .component('font-awesome-icon', FontAwesomeIcon)
-            .mount(el);
+            .component('font-awesome-icon', FontAwesomeIcon);
+
+        // Add Moment.js as a global property
+        app.config.globalProperties.$moment = moment;
+
+        app.mount(el);
+
+        return app;
     },
     progress: {
         color: '#4B5563',
     },
 })
+
+const filters = {
+    timeAgo(date) {
+        return moment(date).fromNow();
+    },
+};
+
+export { filters }; 
