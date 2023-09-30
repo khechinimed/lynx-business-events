@@ -1,7 +1,7 @@
 <template>
-    <div v-if="isModalVisible" class="fixed inset-0 flex items-center justify-center z-50">
+    <div v-if="isModalVisible" class="fixed inset-0 flex items-center items-center justify-center z-50">
       <div class="modal-background fixed inset-0 bg-gray-800 opacity-50"></div>
-      <div class="modal-content bg-white p-6 rounded shadow-lg w-full sm:w-1/2 relative">
+      <div class="modal-content bg-white p-6 rounded shadow-lg w-80 sm:w-1/2 relative">
         <span class="close absolute top-0 right-0 m-4 text-gray-600 hover:text-gray-800 cursor-pointer" @click="closeModal">&times;</span>
         <h2 class="text-xl font-bold mb-4">{{ isEditingText }}</h2>
         <div class="mb-4">
@@ -42,7 +42,6 @@
         async addEvent() {
             const formattedTimestamp = moment(this.eventDate).format('YYYY-MM-DD HH:mm:00');
 
-            console.log('formattedTimestamp:', formattedTimestamp);
             const eventData = {
                 title: this.eventTitle,
                 timestamp: formattedTimestamp,
@@ -50,11 +49,21 @@
 
             try {
                 const response = await axios.post('/events/create_event', eventData);
-                console.log('Event added successfully:', response.data.event);
+                this.$toast.success('L\'événement a été ajouté avec succès !');
+
+                this.eventTitle = '';
+                this.eventDate = '';
+
                 this.fetchData();
                 this.closeModal();
             } catch (error) {
-                console.error('Error adding event:', error);
+                if (error.response && error.response.data && error.response.data.error) {
+                    // affficher les erreurs de validation
+                    this.$toast.warning(error.response.data.error.title[0]);
+                    this.$toast.warning(error.response.data.error.timestamp[0]);
+                } else {
+                    this.$toast.warning('Erreur d\'ajout ! ');
+                }
             }
         },
 
@@ -73,14 +82,20 @@
             try {
                 axios.put(`/events/${eventId}`, eventData)
                     .then(response => {
-                        console.log('Event updated successfully:', response.data.event);
+                        this.$toast.info('L\'événement a été modifié avec succès !');
                         this.fetchData();
                     })
                     .catch(error => {
-                        console.error('Error updating event:', error);
+                        if (error.response && error.response.data && error.response.data.error) {
+                            // affficher les erreurs de validation
+                            this.$toast.warning(error.response.data.error.title[0]);
+                            this.$toast.warning(error.response.data.error.timestamp[0]);
+                        } else {
+                            this.$toast.warning('Erreur d\'ajout ! ');
+                        }
                     });
             } catch (error) {
-                console.error('Error updating event:', error);
+                this.$toast.warning('Erreur de modification !', error);
             }
         },
         handleAction() {
@@ -100,7 +115,7 @@
         },
     },
     computed: {
-        minDate(){
+        minDate() {
             const tomorrow = moment().add(1, 'day');
             const formattedDate = tomorrow.startOf('day').format('YYYY-MM-DDTHH:mm:ss');
 
@@ -122,4 +137,3 @@
         z-index: -1;
     }
 </style>
-  

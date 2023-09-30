@@ -11,6 +11,9 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
+import toast from '@k90mirzaei/vue-toast'
+import '@k90mirzaei/vue-toast/dist/index.css'
+
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
 
@@ -32,6 +35,7 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(toast)
             .component('font-awesome-icon', FontAwesomeIcon);
 
         // Add Moment.js as a global property

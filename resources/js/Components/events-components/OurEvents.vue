@@ -65,7 +65,7 @@
                     this.events = response.data.events;
                 })
                 .catch(error => {
-                    console.error('Error fetching events:', error);
+                    this.$toast.warning('Un problème de fetch!', error);
                 });
         },
 
@@ -88,12 +88,11 @@
             axios.delete(`/events/${id}`)
             .then(response => {
                 
-                console.log('Event deleted successfully:', response.data);
-                
+                this.$toast.error('L\'événement a été supprimé avec succès !');
                 this.events = this.events.filter(item => item.id !== id);
             })
             .catch(error => {
-                console.error('Error deleting event:', error);
+                this.$toast.warning('Un problème !', error);
             });
         },
 
