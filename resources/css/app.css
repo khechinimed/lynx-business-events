@@ -5,3 +5,43 @@
 [x-cloak] {
     display: none;
 }
+
+.calendar-container{
+    border-top: 4px solid #027fff;
+    margin-top: 15px;
+    padding-bottom: 12px;
+    width: 65%;
+}
+
+.fc{
+    margin: 40px;
+}
+
+.fc th.fc-col-header-cell { /* needs to be same precedence */
+    background: #cdd0d6;
+}
+
+.fc-daygrid-dot-event {
+    align-items: center;
+    display: flex;
+    padding: 2px 0px;
+    flex-direction: column;
+}
+
+
+.v-calendar .calendar .days .day.selectedRange{
+    background: #ededff !important;
+    color: #000000 !important;
+
+}
+.day.selectedDate.selectedRange{
+    .number{
+        background-color: #027fff !important;
+        color: white !important;
+        border-radius: 10px;
+    }
+}
+
+.v-calendar .input-field svg.datepicker{
+    fill: #027fff !important;
+}

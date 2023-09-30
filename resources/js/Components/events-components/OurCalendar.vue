@@ -37,7 +37,6 @@
                     date: event.timestamp
                 }));
 
-                console.log(this.calendarOptions.events);
             } catch (error) {
                 console.error('Error fetching events:', error);
             }
@@ -48,26 +47,3 @@
         }
     };
 </script>
-  
-<style>
-    .calendar-container{
-        border-top: 4px solid #027fff;
-        margin-top: 15px;
-        padding-bottom: 12px;
-        width: 65%;
-    }
-    .fc{
-        margin: 40px;
-    }
-
-    .fc th.fc-col-header-cell { /* needs to be same precedence */
-        background: #cdd0d6;
-    }
-
-    .fc-daygrid-dot-event {
-        align-items: center;
-        display: flex;
-        padding: 2px 0px;
-        flex-direction: column;
-    }
-</style>

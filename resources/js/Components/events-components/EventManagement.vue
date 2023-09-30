@@ -1,5 +1,65 @@
 <template>
-    <div>
-         <h1>Managing events</h1> 
+    <Datepicker
+     range
+     v-model="selectedDate"
+     :lang="fr-FR" 
+     
+    />
+    <div class="max-w-8xl mx-auto bg-white shadow-md rounded calendar-container">
+      <FullCalendar :options="calendarOptions" class="custom-calendar"/>
     </div>
-</template>
+  </template>
+  
+  <script>
+    import moment from 'moment';
+    import FullCalendar from '@fullcalendar/vue3';
+    import dayGridPlugin from '@fullcalendar/daygrid';
+    import interactionPlugin from '@fullcalendar/interaction';
+    import timeGridPlugin from '@fullcalendar/timegrid';
+    import listPlugin from '@fullcalendar/list';
+
+    import 'vue-datepicker-ui/lib/vuedatepickerui.css';
+    import VueDatepickerUi from 'vue-datepicker-ui';
+
+    export default {
+        data() {
+            const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
+            return {
+                selectedDate: [
+                    new Date(),
+                    new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)],
+                calendarOptions: {
+                    plugins: [ dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin ],
+                    initialView: 'dayGridMonth',
+                    initialDate: today,
+                    locale: "fr",
+                    buttonText: {
+                        today: 'Aujourd\'hui'
+                    },
+                    events: []
+                }
+            };
+        },
+        methods: {
+            async getEvents() {
+            try {
+                const response = await axios.get('/events');
+                this.calendarOptions.events = response.data.events.map(event => ({
+                    title: event.title,
+                    date: event.timestamp
+                }));
+
+                console.log(this.calendarOptions.events);
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+            }
+        },
+        components: {
+            Datepicker: VueDatepickerUi
+        },
+        mounted() {
+            this.getEvents(); // Fetch events when the component is mounted
+        }
+    };
+</script>

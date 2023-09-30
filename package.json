@@ -33,6 +33,7 @@
         "@fullcalendar/vue3": "^6.1.9",
         "@k90mirzaei/vue-toast": "^1.0.3",
         "moment": "^2.29.4",
-        "toast-js": "^1.1.0"
+        "toast-js": "^1.1.0",
+        "vue-datepicker-ui": "^3.1.1"
     }
 }
