@@ -24,13 +24,28 @@
                     buttonText: {
                         today: 'Aujourd\'hui'
                     },
-                    events: [
-                        { title: 'event 1', date: '2023-10-01' },
-                        { title: 'event 1', date: '2023-10-28' },
-                    ]
+                    events: []
                 }
             };
         },
+        methods: {
+            async getEvents() {
+            try {
+                const response = await axios.get('/events');
+                this.calendarOptions.events = response.data.events.map(event => ({
+                    title: event.title,
+                    date: event.timestamp
+                }));
+
+                console.log(this.calendarOptions.events);
+            } catch (error) {
+                console.error('Error fetching events:', error);
+            }
+            }
+        },
+        mounted() {
+            this.getEvents(); // Fetch events when the component is mounted
+        }
     };
 </script>
   
@@ -47,5 +62,12 @@
 
     .fc th.fc-col-header-cell { /* needs to be same precedence */
         background: #cdd0d6;
+    }
+
+    .fc-daygrid-dot-event {
+        align-items: center;
+        display: flex;
+        padding: 2px 0px;
+        flex-direction: column;
     }
 </style>
