@@ -11,6 +11,13 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
+import FullCalendar from '@fullcalendar/vue3';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+
+
 import toast from '@k90mirzaei/vue-toast'
 import '@k90mirzaei/vue-toast/dist/index.css'
 
@@ -26,7 +33,7 @@ import { faUserSecret, faList, faCalendarDays, faPenToSquare, faEye, faTrash } f
 /* add icons to the library */
 library.add(faUserSecret, faList, faCalendarDays, faPenToSquare, faEye, faTrash)
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Lynx-business-events';
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -36,7 +43,12 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(toast)
-            .component('font-awesome-icon', FontAwesomeIcon);
+            .component('font-awesome-icon', FontAwesomeIcon)
+            .component('FullCalendar', FullCalendar) // Register FullCalendar component
+            .component('dayGridPlugin', dayGridPlugin)
+            .component('interactionPlugin', interactionPlugin)
+            .component('timeGridPlugin', timeGridPlugin)
+            .component('listPlugin', listPlugin)
 
         // Add Moment.js as a global property
         app.config.globalProperties.$moment = moment;
@@ -56,4 +68,4 @@ const filters = {
     },
 };
 
-export { filters }; 
+export { filters };

@@ -17,7 +17,7 @@
 <template>
     <Head title="Events App" />
     <div x-data="setup()" x-init="$refs.loading.classList.add('hidden');">
-      <div class="flex h-screen antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light">
+      <div class="flex min-h-screen antialiased text-gray-900 bg-gray-100 dark:bg-dark dark:text-light">
         <!-- Sidebar -->
         <div class=" inset-y-0 z-10 flex w-80">
           <svg
@@ -80,7 +80,7 @@
           </div>
         </div>
         <!-- Contenu -->
-        <main class="flex flex-col items-center justify-center flex-1">
+        <main class="flex flex-col items-center justify-center flex-auto">
           <component :is="activeMenuItem" v-if="activeMenuItem" />
         </main>
       </div>
