@@ -11,10 +11,9 @@ class Event extends Model
 
     protected $fillable = ['title', 'timestamp'];
 
-    public function scopeWithinDateRange($query, $start, $end)
+    public function scopeInDateRange($query, $startDate, $endDate)
     {
-        return $query->where('timestamp', '>=', $start)
-                    ->where('timestamp', '<=', $end);
+        return $query->whereBetween('timestamp', [$startDate, $endDate]);
     }
     
 }
