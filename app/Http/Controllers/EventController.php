@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use DateTimeZone;
 
 class EventController extends Controller
 {
@@ -21,23 +22,25 @@ class EventController extends Controller
 
     public function getEventsByDateRange(Request $request)
     {
+        // Définir le fuseau horaire français
+        $clientTimezone = new DateTimeZone('Europe/Paris');
+    
         $validator = Validator::make($request->all(), [
             'start_date' => 'required|date_format:Y-m-d',
             'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
-
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-
-        //the model scope
-        $events = Event::inDateRange($startDate, $endDate)->get();
-
+    
+        $startDate = Carbon::parse($request->input('start_date'), $clientTimezone)->endOfDay();
+        $endDate = Carbon::parse($request->input('end_date'), $clientTimezone)->endOfDay();
+    
+        $events = Event::inDateRange($startDate->toDateTimeString(), $endDate->toDateTimeString())->get();
+    
         return response()->json(['events' => $events], 200);
-    }    
+    }
 
     /**
      * Store a newly created resource in storage.
