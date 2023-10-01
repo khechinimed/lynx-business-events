@@ -1,9 +1,9 @@
 <template>
     <Datepicker
      range
+     lang="fr-Fr"
      v-model="selectedDate"
-     :lang="fr-FR" 
-     
+    
     />
     <div class="max-w-8xl mx-auto bg-white shadow-md rounded calendar-container">
       <FullCalendar :options="calendarOptions" class="custom-calendar"/>
@@ -27,7 +27,8 @@
             return {
                 selectedDate: [
                     new Date(),
-                    new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)],
+                    new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)
+                    ],
                 calendarOptions: {
                     plugins: [ dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin ],
                     initialView: 'dayGridMonth',
@@ -42,17 +43,51 @@
         },
         methods: {
             async getEvents() {
-            try {
-                const response = await axios.get('/events');
-                this.calendarOptions.events = response.data.events.map(event => ({
-                    title: event.title,
-                    date: event.timestamp
-                }));
+                try {
+                    const response = await axios.get('/events');
+                    this.calendarOptions.events = response.data.events.map(event => ({
+                        title: event.title,
+                        date: event.timestamp
+                    }));
 
-                console.log(this.calendarOptions.events);
-            } catch (error) {
-                console.error('Error fetching events:', error);
+                    console.log(response.data.events[0].timestamp);
+
+                } catch (error) {
+                    console.error('Error fetching events:', error);
+                }
+            },
+
+            async updateCalendarEvents(startDate, endDate) {
+                try {
+
+                    console.log(startDate, endDate);
+
+                    const response = await axios.get('/eventsrange/date_range', {
+                                    params: {
+                                        start_date:  startDate,
+                                        end_date: endDate
+                                    }
+                                });
+                    this.calendarOptions.events = response.data.events.map(event => ({
+                        title: event.title,
+                        date: event.timestamp
+                    }));
+
+                    console.log(response);
+                } catch (error) {
+                    console.error('Error updating calendar events:', error);
+                }
             }
+        
+        },
+        watch: {
+            selectedDate: function(newDateRange) {
+                // Convert newDateRange to the appropriate format for your API
+                const startDate = newDateRange[0].toISOString().split('T')[0];
+                const endDate = newDateRange[1].toISOString().split('T')[0];
+
+                // Call the new function to update calendar events with the new date range
+                this.updateCalendarEvents(startDate, endDate);
             }
         },
         components: {

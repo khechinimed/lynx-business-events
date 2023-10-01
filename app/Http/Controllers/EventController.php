@@ -19,13 +19,25 @@ class EventController extends Controller
         return response()->json(['events' => $events], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getEventsByDateRange(Request $request)
     {
-        //
-    }
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'required|date_format:Y-m-d',
+            'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        //the model scope
+        $events = Event::inDateRange($startDate, $endDate)->get();
+
+        return response()->json(['events' => $events], 200);
+    }    
 
     /**
      * Store a newly created resource in storage.

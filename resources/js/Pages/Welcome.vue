@@ -58,8 +58,8 @@
               </a>
             </nav>
             <div class="flex-shrink-0 p-4">
-              <a href="https://github.com/khechinimed/lynx-business-events" class="flex items-center space-x-2" target="_blank">                  
-                <span>KHECHINI Mohamed</span>
+              <a href="https://github.com/khechinimed/lynx-business-events" class="flex items-center space-x-2" target="">                  
+                <span>Code Source</span>
               </a>
             </div>
           </div>

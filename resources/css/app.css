@@ -45,3 +45,7 @@
 .v-calendar .input-field svg.datepicker{
     fill: #027fff !important;
 }
+
+.v-calendar .calendar .days .day.selectedDate .number{
+    background-color: #027fff !important;
+}
