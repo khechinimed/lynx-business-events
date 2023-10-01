@@ -22,6 +22,8 @@ Route::resource('events', EventController::class);
 
 Route::get('/events', [EventController::class, 'index']);
 
+Route::get('/eventsrange/date_range', [EventController::class, 'getEventsByDateRange']);
+
 Route::post('/events/create_event', [EventController::class, 'store']);
 
 Route::put('/events/{id}', 'EventController@update');
