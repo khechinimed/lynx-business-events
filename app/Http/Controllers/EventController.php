@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Event;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\EventsDateRangeRequest;
+use App\Http\Requests\EventsRequest;
 use Carbon\Carbon;
 use DateTimeZone;
 
@@ -20,19 +22,10 @@ class EventController extends Controller
         return response()->json(['events' => $events], 200);
     }
 
-    public function getEventsByDateRange(Request $request)
+    public function getEventsByDateRange(EventsDateRangeRequest $request)
     {
         // Définir le fuseau horaire français
         $clientTimezone = new DateTimeZone('Europe/Paris');
-    
-        $validator = Validator::make($request->all(), [
-            'start_date' => 'required|date_format:Y-m-d',
-            'end_date' => 'required|date_format:Y-m-d|after_or_equal:start_date',
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        }
     
         $startDate = Carbon::parse($request->input('start_date'), $clientTimezone)->endOfDay();
         $endDate = Carbon::parse($request->input('end_date'), $clientTimezone)->endOfDay();
@@ -45,17 +38,8 @@ class EventController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EventsRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255',
-            'timestamp' => 'required|date_format:Y-m-d H:i:s|after_or_equal:' . Carbon::now()->format('Y-m-d H:i:s'),
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        }
-
         $event = Event::create($request->all());
 
         return response()->json(['event' => $event], 201);
@@ -87,18 +71,9 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(EventsRequest $request, string $id)
     {
     
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255',
-            'timestamp' => 'required|date_format:Y-m-d H:i:s|after_or_equal:' . Carbon::now()->format('Y-m-d H:i:s'),
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        }
-
         $event = Event::find($id);
         if (!$event) {
             return response()->json(['error' => 'Event not found'], 404);
