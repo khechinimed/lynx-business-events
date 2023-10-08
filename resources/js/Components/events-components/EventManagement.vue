@@ -1,10 +1,6 @@
 <template>
-    <Datepicker
-     range
-     lang="fr-Fr"
-     v-model="selectedDate"
-    
-    />
+    <VueDatePicker v-model="selectedDate" range multi-calendars locale="fr-Fr" placeholder="Quand ?"  cancelText="Annuler" selectText="Rechercher" format='dd MMM. yyyy'/>
+
     <div class="max-w-8xl mx-auto bg-white shadow-md rounded calendar-container">
       <FullCalendar :options="calendarOptions" class="custom-calendar"/>
     </div>
@@ -12,23 +8,21 @@
   
   <script>
     import moment from 'moment';
+    import { ref, onMounted } from 'vue';
     import FullCalendar from '@fullcalendar/vue3';
     import dayGridPlugin from '@fullcalendar/daygrid';
     import interactionPlugin from '@fullcalendar/interaction';
     import timeGridPlugin from '@fullcalendar/timegrid';
     import listPlugin from '@fullcalendar/list';
 
-    import 'vue-datepicker-ui/lib/vuedatepickerui.css';
-    import VueDatepickerUi from 'vue-datepicker-ui';
-
+    import VueDatePicker from '@vuepic/vue-datepicker';
+    import '@vuepic/vue-datepicker/dist/main.css'
+    
     export default {
         data() {
             const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
             return {
-                selectedDate: [
-                    new Date(),
-                    new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000)
-                    ],
+                selectedDate: [],
                 calendarOptions: {
                     plugins: [ dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin ],
                     initialView: 'dayGridMonth',
@@ -38,7 +32,7 @@
                         today: 'Aujourd\'hui'
                     },
                     events: []
-                }
+                },
             };
         },
         methods: {
@@ -50,8 +44,6 @@
                         date: event.timestamp
                     }));
 
-                    console.log(response.data.events[0].timestamp);
-
                 } catch (error) {
                     console.error('Error fetching events:', error);
                 }
@@ -59,8 +51,6 @@
 
             async updateCalendarEvents(startDate, endDate) {
                 try {
-
-                    console.log(startDate, endDate);
 
                     const response = await axios.get('/eventsrange/date_range', {
                                     params: {
@@ -73,11 +63,10 @@
                         date: event.timestamp
                     }));
 
-                    console.log(response);
                 } catch (error) {
                     console.error('Error updating calendar events:', error);
                 }
-            }
+            },
         
         },
         watch: {
@@ -91,7 +80,7 @@
             }
         },
         components: {
-            Datepicker: VueDatepickerUi
+            VueDatePicker
         },
         mounted() {
             this.getEvents(); // Fetch events when the component is mounted

@@ -32,6 +32,7 @@
         "@fullcalendar/timegrid": "^6.1.9",
         "@fullcalendar/vue3": "^6.1.9",
         "@k90mirzaei/vue-toast": "^1.0.3",
+        "@vuepic/vue-datepicker": "^7.1.0",
         "moment": "^2.29.4",
         "toast-js": "^1.1.0",
         "vue-datepicker-ui": "^3.1.1"

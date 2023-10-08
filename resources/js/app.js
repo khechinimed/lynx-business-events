@@ -17,8 +17,8 @@ import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
-import VueDatepickerUi from 'vue-datepicker-ui'
-import 'vue-datepicker-ui/lib/vuedatepickerui.css';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 
 import toast from '@k90mirzaei/vue-toast'
@@ -52,7 +52,7 @@ createInertiaApp({
             .component('interactionPlugin', interactionPlugin)
             .component('timeGridPlugin', timeGridPlugin)
             .component('listPlugin', listPlugin)
-            .component('Datepicker', VueDatepickerUi)
+            .component('VueDatePicker', VueDatePicker);
 
         // Add Moment.js as a global property
         app.config.globalProperties.$moment = moment;

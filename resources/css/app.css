@@ -28,19 +28,22 @@
     flex-direction: column;
 }
 
+.dp--tp-wrap{
+    display: none;
+}
 
 .v-calendar .calendar .days .day.selectedRange{
     background: #ededff !important;
     color: #000000 !important;
 
 }
-.day.selectedDate.selectedRange{
+/* .day.selectedDate.selectedRange{
     .number{
         background-color: #027fff !important;
         color: white !important;
         border-radius: 10px;
     }
-}
+} */
 
 .v-calendar .input-field svg.datepicker{
     fill: #027fff !important;
@@ -48,4 +51,39 @@
 
 .v-calendar .calendar .days .day.selectedDate .number{
     background-color: #027fff !important;
+}
+
+.dp__main{
+    width: 40% !important;
+}
+
+.dp__menu.dp__menu_index{
+    padding: 11px;
+}
+
+.dp__pointer.dp__input_readonly{
+    padding-left: 40px !important;
+    padding-right: 20px !important;
+    
+    min-width: inherit;
+    height: 50px;
+    border-radius: 6px !important;
+
+    font-weight: inherit;
+}
+
+.dp__range_end, .dp__range_start, .dp__active_date {
+    background: #007eff !important;
+}
+
+.dp__flex_display {
+    gap: 40px;
+}
+
+.dp__clear_icon{
+    display: none !important;
+}
+
+.dp__icon{
+    fill: #007eff !important;
 }
