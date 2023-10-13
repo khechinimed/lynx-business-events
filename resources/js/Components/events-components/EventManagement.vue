@@ -51,18 +51,11 @@
 
             async updateCalendarEvents(startDate, endDate) {
                 try {
-
-                    const response = await axios.get('/eventsrange/date_range', {
-                                    params: {
-                                        start_date:  startDate,
-                                        end_date: endDate
-                                    }
-                                });
+                    const response = await axios.get(`/eventsrange/date_range?start_date=${startDate}&end_date=${endDate}`);
                     this.calendarOptions.events = response.data.events.map(event => ({
                         title: event.title,
                         date: event.timestamp
                     }));
-
                 } catch (error) {
                     console.error('Error updating calendar events:', error);
                 }

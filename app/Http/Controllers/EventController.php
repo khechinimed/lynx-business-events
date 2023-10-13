@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Event;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\EventsDateRangeRequest;
 use App\Http\Requests\EventsRequest;
-use Carbon\Carbon;
-use DateTimeZone;
 
 class EventController extends Controller
 {
@@ -17,21 +13,19 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
         $events = Event::all();
         return response()->json(['events' => $events], 200);
     }
 
     public function getEventsByDateRange(EventsDateRangeRequest $request)
     {
-        // Définir le fuseau horaire français
-        $clientTimezone = new DateTimeZone('Europe/Paris');
-    
-        $startDate = Carbon::parse($request->input('start_date'), $clientTimezone)->endOfDay();
-        $endDate = Carbon::parse($request->input('end_date'), $clientTimezone)->endOfDay();
-    
-        $events = Event::inDateRange($startDate->toDateTimeString(), $endDate->toDateTimeString())->get();
-    
+        $clientTimezone = 'Europe/Paris';
+
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        $events = Event::inDateRange($startDate, $endDate, $clientTimezone)->get();
+
         return response()->json(['events' => $events], 200);
     }
 
@@ -48,36 +42,19 @@ class EventController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-        $event = Event::find($id);
+    // public function show(string $id)
+    // {
+    //     $event = Event::findOrFail($id);
 
-        if (!$event) {
-            return response()->json(['error' => 'Event not found'], 404);
-        }
-
-        return response()->json(['event' => $event], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+    //     return response()->json(['event' => $event], 200);
+    // }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(EventsRequest $request, string $id)
     {
-    
-        $event = Event::find($id);
-        if (!$event) {
-            return response()->json(['error' => 'Event not found'], 404);
-        }
+        $event = Event::findOrFail($id);
 
         $event->update($request->all());
 
@@ -89,12 +66,7 @@ class EventController extends Controller
      */
     public function destroy(string $id)
     {
-        //
-        $event = Event::find($id);
-
-        if (!$event) {
-            return response()->json(['error' => 'Event not found'], 404);
-        }
+        $event = Event::findOrFail($id);
 
         $event->delete();
 
