@@ -16,16 +16,16 @@
         <button @click="handleAction" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded">
             {{ buttonText }}
         </button>
-
       </div>
     </div>
 </template>
-  
-<script>
-  import moment from 'moment';
 
-  export default {
-    props: ['isModalVisible', 'isEditing', 'eventId', 'eventTitleToEdit', 'eventDateToEdit', 'fetchData'],
+<script>
+import moment from 'moment';
+import {router} from "@inertiajs/vue3";
+
+export default {
+    props: ['isModalVisible', 'isEditing', 'eventId', 'eventTitleToEdit', 'eventDateToEdit'],
     data() {
         return {
             eventTitle: this.eventTitleToEdit || '',
@@ -35,30 +35,24 @@
     methods: {
         closeModal() {
             this.$emit('close-modal');
-
             this.$emit('update:isEditing', false);
         },
 
         async addEvent() {
-            const formattedTimestamp = moment(this.eventDate).format('YYYY-MM-DD HH:mm:00');
-
-            const eventData = {
+            const formattedTimestamp = moment(this.eventDate).format('YYYY-MM-DD HH:mm:00'),
+            eventData = {
                 title: this.eventTitle,
                 timestamp: formattedTimestamp,
             };
-
             try {
-                const response = await axios.post('/events/create_event', eventData);
-                this.$toast.success('L\'événement a été ajouté avec succès !');
-
-                this.eventTitle = '';
-                this.eventDate = '';
-
-                this.fetchData();
-                this.closeModal();
+                router.post(`/events`, eventData, {
+                    onSuccess: response => {
+                        this.$toast.success('L\'événement a été ajouté avec succès !');
+                        router.visit('/');
+                    },
+                })
             } catch (error) {
                 if (error.response && error.response.data && error.response.data.error) {
-                    // affficher les erreurs de validation
                     this.$toast.warning(error.response.data.error.title[0]);
                     this.$toast.warning(error.response.data.error.timestamp[0]);
                 } else {
@@ -68,32 +62,23 @@
         },
 
         editEvent() {
-
-            this.closeModal();
-
             const formattedTimestamp = moment(this.eventDate).format('YYYY-MM-DD HH:mm:00');
             const eventData = {
                 title: this.eventTitle,
                 timestamp: formattedTimestamp,
             };
-
             const eventId = this.eventId;
-
             try {
-                axios.put(`/events/${eventId}`, eventData)
-                    .then(response => {
-                        this.$toast.info('L\'événement a été modifié avec succès !');
-                        this.fetchData();
-                    })
-                    .catch(error => {
-                        if (error.response && error.response.data && error.response.data.error) {
-                            // affficher les erreurs de validation
-                            this.$toast.warning(error.response.data.error.title[0]);
-                            this.$toast.warning(error.response.data.error.timestamp[0]);
-                        } else {
-                            this.$toast.warning('Erreur d\'ajout ! ');
-                        }
-                    });
+                router.put(`/events/${eventId}`, eventData, {
+                    onError: errors => {
+                        this.$toast.warning('Request Failed');
+                    },
+                    onSuccess: response => {
+                        this.$toast.success('L\'événement a été modifié avec succès !');
+                        this.closeModal();
+                        router.visit('/');
+                    },
+                })
             } catch (error) {
                 this.$toast.warning('Erreur de modification !', error);
             }
@@ -105,7 +90,7 @@
                 this.addEvent();
             }
         }
-    }, 
+    },
     watch: {
         eventTitleToEdit(newTitle) {
             this.eventTitle = newTitle;
@@ -117,21 +102,19 @@
     computed: {
         minDate() {
             const tomorrow = moment().add(1, 'day');
-            const formattedDate = tomorrow.startOf('day').format('YYYY-MM-DDTHH:mm:ss');
-
-            return formattedDate;
+            return tomorrow.startOf('day').format('YYYY-MM-DDTHH:mm:ss');
         },
         buttonText() {
             return this.isEditing ? 'Modifier' : 'Ajouter';
         },
-        
+
         isEditingText() {
             return this.isEditing ? 'Modfifier un évenement' : 'Ajouter un évenement';
         }
     }
   };
 </script>
-  
+
 <style scoped>
     .modal-background {
         z-index: -1;

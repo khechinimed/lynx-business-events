@@ -44,7 +44,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(ZiggyVue)
+            .use(ZiggyVue, Ziggy)
             .use(toast)
             .component('font-awesome-icon', FontAwesomeIcon)
             .component('FullCalendar', FullCalendar) // Register FullCalendar component

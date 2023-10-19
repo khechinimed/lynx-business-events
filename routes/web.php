@@ -20,28 +20,33 @@ use App\Http\Controllers\EventController;
 
 Route::resource('events', EventController::class);
 
-Route::get('/events', [EventController::class, 'index']);
+//Route::get('/events', [EventController::class, 'index']);
 
-Route::get('/eventsrange/date_range', [EventController::class, 'getEventsByDateRange']);
+Route::get('/events-range/date-range', [EventController::class, 'getEventsByDateRange']);
 
-Route::post('/events/create_event', [EventController::class, 'store']);
+//Route::post('/events/create_event', [EventController::class, 'store']);
 
-Route::put('/events/{id}', 'EventController@update');
- 
-Route::delete('/events/{id}', [EventController::class, 'destroy']);
+//Route::put('/events/{id}', 'EventController@update');
+//
+//Route::delete('/events/{id}', [EventController::class, 'destroy']);
+//
+//Route::get('/', function () {
+//    return Inertia::render('Views/OurEvents', [
+//        'laravelVersion' => Application::VERSION,
+//        'phpVersion' => PHP_VERSION,
+//    ]);
+//});
+//
+//
+//Route::middleware([
+//    'auth:sanctum',
+//    config('jetstream.auth_session'),
+//    'verified',
+//])->group(function () {
+//
+//});
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::get('/', [EventController::class, 'index'])->name('OurEvents');
+Route::get('/our-calendar', [EventController::class, 'calendar'])->name('OurCalendar');
+Route::get('/event-management', [EventController::class, 'management'])->name('EventManagement');
 
-
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-
-});

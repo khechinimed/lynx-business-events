@@ -1,18 +1,23 @@
+<script setup>
+import SideBar from '../../Layouts/SideBar.vue'
+
+</script>
 <template>
-    <div class="max-w-8xl mx-auto bg-white shadow-md rounded calendar-container">
-      <FullCalendar :options="calendarOptions" class="custom-calendar"/>
-    </div>
-  </template>
-  
+    <side-bar>
+        <div class="max-w-8xl mx-auto bg-white shadow-md rounded calendar-container">
+          <FullCalendar :options="calendarOptions" class="custom-calendar"/>
+        </div>
+    </side-bar>
+</template>
+
   <script>
-    import moment from 'moment';
-    import FullCalendar from '@fullcalendar/vue3';
     import dayGridPlugin from '@fullcalendar/daygrid';
     import interactionPlugin from '@fullcalendar/interaction';
     import timeGridPlugin from '@fullcalendar/timegrid';
     import listPlugin from '@fullcalendar/list';
 
     export default {
+        props:['allEvents'],
         data() {
             const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
             return {
@@ -24,26 +29,17 @@
                     buttonText: {
                         today: 'Aujourd\'hui'
                     },
-                    events: []
+                    events: this.getEvents()
                 }
             };
         },
         methods: {
-            async getEvents() {
-            try {
-                const response = await axios.get('/events');
-                this.calendarOptions.events = response.data.events.map(event => ({
+            getEvents() {
+                return this.allEvents?.map(event => ({
                     title: event.title,
                     date: event.timestamp
                 }));
-
-            } catch (error) {
-                console.error('Error fetching events:', error);
             }
-            }
-        },
-        mounted() {
-            this.getEvents(); // Fetch events when the component is mounted
         }
     };
 </script>

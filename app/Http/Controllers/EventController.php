@@ -5,19 +5,34 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Http\Requests\EventsDateRangeRequest;
 use App\Http\Requests\EventsRequest;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class EventController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function index(): Response
     {
-        $events = Event::all();
-        return response()->json(['events' => $events], 200);
+        return Inertia::render('Views/OurEvents', [
+            'allEvents' => Event::all() ?? []
+        ]);
     }
 
-    public function getEventsByDateRange(EventsDateRangeRequest $request)
+    public function calendar(): Response
+    {
+        return Inertia::render('Views/OurCalendar', [
+            'allEvents' => Event::all() ?? []
+        ]);
+    }
+
+    public function management(): Response
+    {
+        return Inertia::render('Views/EventManagement', [
+            'allEvents' => Event::all() ?? []
+        ]);
+    }
+
+    public function getEventsByDateRange(EventsDateRangeRequest $request): Response
     {
         $clientTimezone = 'Europe/Paris';
 
@@ -25,51 +40,34 @@ class EventController extends Controller
         $endDate = $request->query('end_date');
 
         $events = Event::inDateRange($startDate, $endDate, $clientTimezone)->get();
-
-        return response()->json(['events' => $events], 200);
+        return Inertia::render('Views/EventManagement', [
+            'allEvents' => $events ?? []
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(EventsRequest $request)
+    public function store(EventsRequest $request): Response
     {
-        $event = Event::create($request->all());
-
-        return response()->json(['event' => $event], 201);
+        Event::create($request->all());
+        return Inertia::render('Views/OurEvents', [
+            'allEvents' => Event::all() ?? []
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    // public function show(string $id)
-    // {
-    //     $event = Event::findOrFail($id);
-
-    //     return response()->json(['event' => $event], 200);
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(EventsRequest $request, string $id)
+    public function update(EventsRequest $request, string $id): Response
     {
         $event = Event::findOrFail($id);
-
         $event->update($request->all());
-
-        return response()->json(['event' => $event], 200);
+        return Inertia::render('Views/OurEvents', [
+            'allEvents' => Event::all() ?? []
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(string $id): Response
     {
         $event = Event::findOrFail($id);
-
         $event->delete();
-
-        return response()->json(['message' => 'Event deleted successfully'], 200);
+        return Inertia::render('Views/OurEvents', [
+            'allEvents' => Event::all() ?? []
+        ]);
     }
 }
